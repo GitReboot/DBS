@@ -1,0 +1,93 @@
+use 20200018db;
+
+create table salesman
+(
+	salesman_id int(5) primary key,
+    name char(20),
+    city char(20),
+    commission float(10)
+);
+
+create table customer
+(
+	customer_id int(5) primary key,
+    cust_name char(20),
+    city char(20),
+    grade int(5),
+    salesman_id int(5),
+    foreign key (salesman_id) references salesman(salesman_id)
+);
+
+create table orders (
+	ord_no int(5) primary key,
+    purch_amt float(10),
+    ord_date date,
+    customer_id int(5),
+    salesman_id int(5),
+    foreign key (customer_id) references customer(customer_id),
+    foreign key (salesman_id) references salesman(salesman_id)
+);
+
+insert into salesman(salesman_id, name, city, commission) values 
+(5001, 'James Hoog', 'New York', 0.15),
+(5002, 'Nail Knite', 'Paris', 0.13),
+(5005, 'Pit Alex', 'London', 0.11),
+(5006, 'Mc Lyon', 'Paris', 0.14),
+(5003, 'Lauson Hen', '', 0.12),
+(5007, 'Paul Adam', 'Rome', 0.13);
+
+insert into customer(customer_id, cust_name, city, grade, salesman_id) values 
+(3002, 'Nick Rimando', 'New York', 100, 5001),
+(3005, 'Graham Zusi', 'California', 200, 5002),
+(3001, 'Brad Guzan', 'London', null, 5005),
+(3004, 'Fabian Johns', 'Paris', 300, 5006),
+(3007, 'Brad Davis', 'New York', 200, 5001),
+(3009, 'Geoff Camero', 'Berlin', 100, 5003),
+(3008, 'Julian Green', 'London', 300, 5002),
+(3003, 'Jozy Altidor', 'Moscow', 200, 5007);
+
+insert into orders(ord_no, purch_amt, ord_date, customer_id, salesman_id) values 
+(70001, 150.5, '2012-10-05', 3005, 5002),
+(70009, 270.65, '2012-09-10', 3001, 5005),
+(70002, 65.26, '2012-10-05', 3002, 5001),
+(70004, 110.5, '2012-08-17', 3009, 5003),
+(70007, 948.5, '2012-09-10', 3005, 5002),
+(70005, 2400.6, '2012-07-27', 3007, 5001),
+(70008, 5760, '2012-09-10', 3002, 5001),
+(70010, 1983.43, '2012-10-10', 3004, 5006),
+(70003, 2480.4, '2012-10-10', 3009, 5003),
+(70012, 250.45, '2012-06-27', 3008, 5002),
+(70011, 75.29, '2012-08-17', 3003, 5007),
+(70013, 3045.6, '2012-04-25', 3002, 5001);
+
+desc salesman;
+desc customer;
+desc orders;
+select * from salesman;
+select * from customer;
+select * from orders;
+
+#1
+select customer.cust_name,salesman.name,salesman.city from salesman, customer where salesman.city=customer.city;
+#2
+select customer.cust_name,salesman.name from salesman,customer where customer.salesman_id=salesman.salesman_id;
+#3
+select distinct ord_no from salesman,customer,orders where customer.city<>salesman.city;
+#4
+select ord_no,cust_name from customer,orders where customer.customer_id=orders.customer_id;
+#5
+select distinct cust_name,grade from customer,salesman,orders where customer.customer_id=orders.customer_id and grade is not null and customer.salesman_id is not null order by grade;
+#6
+select cust_name,customer.city,customer.salesman_id,commission from customer ,salesman where customer.salesman_id=salesman.salesman_id and commission>0.12 and commission <0.14;
+#7
+select distinct ord_no,customer.cust_name,commission,commission*purch_amt from orders,customer,salesman where grade>200 and customer.customer_id=orders.customer_id and salesman.city is not null;
+#8
+select * from customer where grade >100;
+#9
+select * from customer where grade >100 and city='new york';
+#10
+select * from customer where city='new york' OR grade <100;
+#11
+select * from customer where city<>'new york' and grade <100;
+#12
+select * from orders where (ord_date<>"2012-09-10" and salesman_id<5005) OR purch_amt<1000;

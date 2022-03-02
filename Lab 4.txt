@@ -1,0 +1,22 @@
+# Lab 4
+use 20200018db;
+#1
+select * from salesman where city=any(select city from customer);
+#2
+select * from orders where purch_amt>any(select purch_amt from orders where ord_date='2012-09-10');
+#3
+select * from orders where purch_amt<(select max(purch_amt) from orders o, customer c where o.customer_id=c.customer_id and c.city='London');
+#4
+select * from customer where grade>all(select grade from customer where city='New York');
+#5
+select * from customer where grade<>any(select grade from customer where city='London');
+#6
+select * from orders where salesman_id=any(select salesman_id from salesman where name = 'Paul Adam');
+#7
+select * from orders where salesman_id=any(select salesman_id from salesman where city = 'London');
+#8
+select * from orders where purch_amt>(select avg(purch_amt) from orders o where o.ord_date='2012-10-10');
+#9
+select commission from salesman where city=(select city from customer c where c.city='Paris');
+#10
+select * from customer where customer_id=any(select customer_id from orders o where o.ord_date='2012-10-5');

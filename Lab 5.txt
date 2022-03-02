@@ -1,0 +1,45 @@
+#Lab 5
+use 20200018db;
+#1
+select c.cust_name, s.name from customer c inner join salesman s on c.salesman_id = s.salesman_id;
+#2
+select c.cust_name from customer c inner join salesman s on c.salesman_id = s.salesman_id and s.commission > 0.12;
+#3
+select c.cust_name from customer c inner join salesman s on c.salesman_id = s.salesman_id and s.commission > 0.12 and c.city <> s.city;
+#4
+select * from customer natural join salesman natural join orders;
+#5
+select * from customer c left join salesman s on c.salesman_id = s.salesman_id order by c.customer_id;
+#6
+select * from salesman cross join customer;
+
+create table course
+(
+	course_id varchar(10),
+    title char(20),
+    dept_name char(20),
+    credits int(5)
+);
+
+create table prereq
+(
+	course_id varchar(10),
+    prereq_id varchar(10)
+);
+
+insert into course(course_id, title, dept_name, credits) values 
+('BIO-301', 'Genetics', 'Biology', 4),
+('CS-190', 'Game Design', 'Comp. Sci.', 4),
+('CS-315', 'Robotics', 'Comp. Sci.', 3);
+
+insert into prereq(course_id, prereq_id) values 
+('BIO-301','BIO-101'),
+('CS-190','CS-101'),
+('CS-347','CS-101');
+
+#7
+select c.course_id, c.title, c.dept_name, c.credits, p.prereq_id from course c left outer join prereq p on p.course_id = c.course_id;
+#8
+select p.course_id, c.title, c.dept_name, c.credits, p.prereq_id from course c right outer join prereq p on p.course_id = c.course_id;
+#9
+select c.course_id, c.title, c.dept_name, c.credits, p.prereq_id from course c left outer join prereq p on p.course_id = c.course_id union select p.course_id, c.title, c.dept_name, c.credits, p.prereq_id from course c right outer join prereq p on p.course_id = c.course_id;
